@@ -2,7 +2,7 @@
 
 Mobile-first HTML5 Snake. One file, no build step, no frameworks.
 
-Open `index.html` in a browser, or drop it on a phone home screen.
+Open `index.html` in a browser, or add it to a phone home screen.
 
 ## Play
 
@@ -22,6 +22,8 @@ Open `index.html` in a browser, or drop it on a phone home screen.
 | Escape | Close settings |
 
 180° reverse into the body is blocked.
+
+Phone layout keeps the board, score, and D-pad on screen. Landscape puts the pad beside the board.
 
 ## Settings
 

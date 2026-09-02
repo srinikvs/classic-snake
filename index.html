@@ -33,23 +33,23 @@
       overflow: hidden; overscroll-behavior: none;
       -webkit-font-smoothing: antialiased;
     }
-    button:not(:disabled) { cursor: pointer; }
+    button:not(:disabled) { cursor: pointer; touch-action: manipulation; }
     .shell {
-      min-height: 100dvh; min-height: 100svh;
+      height: 100vh; height: 100dvh; height: 100svh; max-height: 100dvh;
       display: flex; justify-content: center;
       user-select: none; -webkit-user-select: none;
+      overflow: hidden;
     }
     .col {
-      width: 100%; max-width: 480px;
+      width: 100%; max-width: 480px; height: 100%; min-height: 0;
       display: flex; flex-direction: column;
-      padding: 0 16px;
-      padding-top: max(12px, env(safe-area-inset-top));
-      padding-bottom: max(12px, env(safe-area-inset-bottom));
-      min-height: 100dvh;
+      padding-inline: max(16px, env(safe-area-inset-left), env(safe-area-inset-right));
+      padding-top: max(10px, env(safe-area-inset-top));
+      padding-bottom: max(24px, env(safe-area-inset-bottom));
     }
     header {
       display: flex; align-items: center; gap: 8px;
-      height: 48px; flex-shrink: 0;
+      height: 44px; flex: 0 0 auto;
     }
     .icon-btn {
       width: 44px; height: 44px; flex-shrink: 0;
@@ -71,9 +71,19 @@
       font-family: var(--font-mono); font-size: 15px; font-weight: 600;
       font-variant-numeric: tabular-nums;
     }
-    .spacer { flex: 1; min-height: 8px; }
+    .spacer { display: none; }
+    .board-slot {
+      flex: 1 1 auto; min-height: 0; min-width: 0; width: 100%;
+      display: grid; place-items: center; margin-top: 8px;
+    }
+    .board-stack {
+      position: relative;
+      width: var(--board, min(100%, 70dvh));
+      height: var(--board, min(100%, 70dvh));
+      max-width: 100%; max-height: 100%;
+    }
     .board-frame {
-      position: relative; width: 100%; aspect-ratio: 1;
+      position: relative; width: 100%; height: 100%;
       border-radius: 20px; padding: 8px;
       background: var(--elevated); border: 1px solid var(--line);
       box-shadow: 0 18px 48px rgba(0,0,0,.42), inset 0 1px 0 rgba(255,255,255,.04);
@@ -88,6 +98,7 @@
       display: flex; align-items: center; justify-content: center;
       border-radius: 12px;
       background: color-mix(in oklab, var(--ink) 72%, transparent);
+      pointer-events: auto; touch-action: manipulation;
     }
     .veil.pause { background: color-mix(in oklab, var(--ink) 58%, transparent); border: 0; width: auto; }
     .card {
@@ -112,13 +123,15 @@
       font-variant-numeric: tabular-nums;
     }
     .cta {
-      margin-top: 20px; height: 48px; width: 100%;
+      margin-top: 16px; height: 48px; width: 100%;
       display: flex; align-items: center; justify-content: center; gap: 8px;
       border: 0; border-radius: 12px;
       background: var(--mint); color: var(--mint-fg);
       font-family: var(--font-display); font-size: 15px; font-weight: 600; letter-spacing: 0.08em;
       animation: pulse-play 2.4s ease-in-out infinite;
+      touch-action: manipulation;
     }
+    .cta:active { transform: scale(0.98); }
     .cta.ghost {
       margin-top: 8px; height: 44px;
       background: transparent; color: var(--fg); border: 1px solid var(--line);
@@ -134,20 +147,25 @@
       animation: toast-in 250ms cubic-bezier(0.22,1,0.36,1);
     }
     .meta {
-      margin-top: 12px; display: flex; justify-content: space-between;
+      flex: 0 0 auto;
+      margin-top: 8px; display: flex; justify-content: space-between;
       padding: 0 4px; font-size: 12px; color: var(--muted);
       font-variant-numeric: tabular-nums;
     }
     .dpad {
+      --pad: clamp(48px, 13.5vw, 64px);
+      flex: 0 0 auto;
       display: grid;
-      grid-template-columns: 64px 64px 64px;
-      grid-template-rows: 64px 64px 64px;
-      gap: 6px; justify-content: center; margin: 0 auto 4px;
+      grid-template-columns: var(--pad) var(--pad) var(--pad);
+      grid-template-rows: var(--pad) var(--pad) var(--pad);
+      gap: 6px; justify-content: center; margin: 10px auto 0;
+      touch-action: none;
     }
     .dpad-btn {
       display: flex; align-items: center; justify-content: center;
+      min-width: 44px; min-height: 44px;
       border: 1px solid var(--line); background: var(--elevated); color: var(--fg);
-      border-radius: 12px;
+      border-radius: 12px; touch-action: none;
     }
     .dpad-btn:active, .dpad-btn.is-down { transform: scale(0.96); background: var(--panel); }
     .dpad-btn.pause { border-radius: 999px; background: var(--panel); color: var(--mint); }
@@ -227,6 +245,7 @@
       display: flex; width: 100%; align-items: center; justify-content: space-between;
       background: none; border: 0; color: var(--fg); padding: 4px 0;
       font-family: var(--font-display); font-size: 13px; font-weight: 500; letter-spacing: 0.04em;
+      min-height: 44px;
     }
     .toggle {
       width: 48px; height: 28px; border-radius: 999px; background: var(--line); position: relative;
@@ -248,6 +267,25 @@
       0%, 100% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--mint) 35%, transparent); }
       50% { box-shadow: 0 0 0 8px color-mix(in oklab, var(--mint) 0%, transparent); }
     }
+    @media (max-height: 720px) {
+      .dpad { --pad: clamp(44px, 12vw, 56px); gap: 4px; margin-top: 8px; }
+      .card h2 { font-size: clamp(22px, 7vw, 28px); }
+      .big-score { font-size: clamp(28px, 10vw, 40px); }
+    }
+    @media (orientation: landscape) and (max-height: 560px) {
+      .col {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-rows: auto minmax(0, 1fr) auto;
+        grid-template-areas: "header dpad" "board dpad" "hud dpad";
+        column-gap: 12px; max-width: 920px;
+        padding-bottom: max(12px, env(safe-area-inset-bottom));
+      }
+      header { grid-area: header; }
+      .board-slot { grid-area: board; margin-top: 4px; }
+      .meta { grid-area: hud; margin-top: 4px; }
+      .dpad { grid-area: dpad; align-self: center; margin: 0 4px 0 0; --pad: clamp(44px, 18vh, 56px); }
+    }
     @media (prefers-reduced-motion: reduce) {
       .card, .toast, .drawer, .backdrop, .cta { animation: none; }
     }
@@ -266,25 +304,27 @@
           <span class="score" id="hudScore">0</span>
         </div>
       </header>
-      <div class="spacer"></div>
-      <div class="board-frame" id="board">
-        <canvas id="canvas" aria-label="Snake board"></canvas>
-        <div class="veil" id="overlay">
-          <div class="card" id="overlayCard"></div>
-        </div>
-        <button type="button" class="veil pause hidden" id="pauseVeil" aria-label="Resume">
-          <div class="card">
-            <p class="kicker">PAUSED</p>
-            <p>Tap to resume</p>
+      <div class="board-slot" id="slot">
+        <div class="board-stack">
+          <div class="board-frame" id="board">
+            <canvas id="canvas" aria-label="Snake board"></canvas>
           </div>
-        </button>
-        <div class="toast hidden" id="toast"></div>
+          <div class="veil" id="overlay">
+            <div class="card" id="overlayCard"></div>
+          </div>
+          <button type="button" class="veil pause hidden" id="pauseVeil" aria-label="Resume">
+            <div class="card">
+              <p class="kicker">PAUSED</p>
+              <p>Tap to resume</p>
+            </div>
+          </button>
+          <div class="toast hidden" id="toast"></div>
+        </div>
       </div>
       <div class="meta">
         <span id="metaNext">0 / 10 to next level</span>
         <span id="metaBest">Best 0</span>
       </div>
-      <div class="spacer"></div>
       <div class="dpad" id="dpad">
         <span></span>
         <button type="button" class="dpad-btn" data-dir="0,-1" aria-label="Up">
@@ -481,6 +521,7 @@ class SnakeEngine {
     if (this.audio.state === "suspended") this.audio.resume();
   }
   play() {
+    if (this.status === "playing") return;
     this.unlockAudio();
     this.gridSize = this.settings.gridSize;
     this.status = "playing"; this.score = 0; this.level = 1; this.foodsThisLevel = 0;
@@ -595,9 +636,8 @@ class SnakeEngine {
     }
   }
   resize() {
-    const parent = this.canvas.parentElement;
-    if (!parent) return;
-    const css = Math.max(1, Math.floor(parent.clientWidth));
+    const css = Math.max(1, Math.round(this.canvas.clientWidth || 0));
+    if (css < 8) return;
     const dpr = Math.min(window.devicePixelRatio || 1, 2.5);
     if (css === this.css && dpr === this.dpr && this.canvas.width === Math.round(css * dpr)) return;
     this.css = css; this.dpr = dpr;
@@ -776,14 +816,26 @@ const els = {
   btnPause: document.getElementById("btnPause"),
 };
 
+function bindPlay(btn) {
+  if (!btn) return;
+  const go = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (engine.status === "playing") return;
+    engine.play();
+  };
+  btn.addEventListener("pointerup", go);
+  btn.addEventListener("click", go);
+}
+
 function renderOverlay(snap) {
   if (snap.status === "ready") {
     els.overlayCard.innerHTML =
       '<p class="kicker">ARCADE</p><h2>Classic Snake</h2>' +
-      '<p>Eat blocks. Grow. Don't hit the wall.</p>' +
+      "<p>Eat blocks. Grow. Don't hit the wall.</p>" +
       '<button type="button" class="cta" id="btnPlay"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>Play</button>';
     els.overlay.classList.remove("hidden");
-    document.getElementById("btnPlay").onclick = () => engine.play();
+    bindPlay(document.getElementById("btnPlay"));
   } else if (snap.status === "over") {
     els.overlayCard.innerHTML =
       '<p class="kicker danger">GAME OVER</p>' +
@@ -792,7 +844,7 @@ function renderOverlay(snap) {
       '<button type="button" class="cta" id="btnAgain"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>Play again</button>' +
       '<button type="button" class="cta ghost" id="btnSettings">Settings</button>';
     els.overlay.classList.remove("hidden");
-    document.getElementById("btnAgain").onclick = () => engine.play();
+    bindPlay(document.getElementById("btnAgain"));
     document.getElementById("btnSettings").onclick = openMenu;
   } else {
     els.overlay.classList.add("hidden");
@@ -868,9 +920,15 @@ renderSettings(engine.settings);
 document.getElementById("btnMenu").onclick = openMenu;
 document.getElementById("btnClose").onclick = closeMenu;
 document.getElementById("backdrop").onclick = closeMenu;
+document.getElementById("pauseVeil").onpointerup = (e) => { e.preventDefault(); e.stopPropagation(); engine.resume(); };
 document.getElementById("pauseVeil").onclick = () => engine.resume();
 document.getElementById("btnPause").onpointerdown = (e) => { e.preventDefault(); engine.togglePause(); };
-document.getElementById("board").onpointerdown = (e) => engine.onPointerDown(e);
+document.getElementById("overlay").onpointerdown = (e) => e.stopPropagation();
+document.getElementById("overlay").onpointerup = (e) => e.stopPropagation();
+document.getElementById("board").onpointerdown = (e) => {
+  if (engine.status !== "playing") return;
+  engine.onPointerDown(e);
+};
 document.getElementById("board").onpointermove = (e) => engine.onPointerMove(e);
 document.getElementById("board").onpointerup = (e) => engine.onPointerUp(e);
 document.getElementById("board").onpointercancel = (e) => engine.onPointerUp(e);
@@ -890,7 +948,18 @@ window.addEventListener("keydown", (e) => {
   if (engine.handleKey(e.code, menuOpen) || (GAME_CODES.has(e.code) && !menuOpen)) e.preventDefault();
 });
 document.addEventListener("visibilitychange", () => engine.onVisibility());
-window.addEventListener("blur", () => { if (engine.status === "playing") engine.togglePause(); });
+window.addEventListener("resize", () => engine.resize());
+window.addEventListener("orientationchange", () => engine.resize());
+(function sizeBoard() {
+  const slot = document.getElementById("slot");
+  const apply = () => {
+    const size = Math.max(140, Math.floor(Math.min(slot.clientWidth, slot.clientHeight)));
+    slot.style.setProperty("--board", size + "px");
+    engine.resize();
+  };
+  apply();
+  if (window.ResizeObserver) new ResizeObserver(apply).observe(slot);
+})();
 </script>
 </body>
 </html>
