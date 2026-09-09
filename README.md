@@ -2,9 +2,11 @@
 
 Mobile-first HTML5 Snake. Vite + React, Playadda UX standard.
 
-Play at `https://playadda.duckdns.org/classic-snake/` after deploy. Vite `base` is **`/classic-snake/`**.
+Play at `https://playadda.duckdns.org/classic-snake/` after Jenkins deploy.
+Vite `base` is **`/classic-snake/`**.
 
-**Deploy serves the repo root.** Root `index.html` + `assets/` are the **production build** (hashed JS/CSS under `/classic-snake/assets/`). Do not deploy the Vite dev entry (`/src/main.tsx`). After source changes run `npm run build` and commit the promoted files.
+Jenkins: `npm ci` → `vite build --base /classic-snake/` → rsync **`dist/`**.
+Root `index.html` is the Vite source (`/src/main.tsx` only). Do not commit hashed `/classic-snake/assets/` paths.
 
 ## v1.1.0
 
@@ -56,8 +58,8 @@ Vite 6 + React 19 + TypeScript. Canvas 2D + `requestAnimationFrame`. Web Audio b
 
 ```bash
 npm install
-npm run dev      # restores index.dev.html, http://localhost:5173/classic-snake/
-npm run build    # dist/ then promotes index.html + assets/ for Playadda
+npm run dev      # http://localhost:5173/classic-snake/
+npm run build    # writes dist/ (Jenkins rsyncs this)
 ```
 
 ## License
