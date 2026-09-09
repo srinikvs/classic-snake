@@ -1,0 +1,24 @@
+{
+  "name": "classic-snake",
+  "private": true,
+  "version": "1.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --open /classic-snake/",
+    "build": "tsc -b && vite build --base /classic-snake/",
+    "preview": "vite preview --base /classic-snake/"
+  },
+  "dependencies": {
+    "lucide-react": "^0.510.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.16.5",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "typescript": "~5.7.2",
+    "vite": "^6.0.0"
+  }
+}
