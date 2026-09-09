@@ -4,9 +4,9 @@
   "version": "1.1.0",
   "type": "module",
   "scripts": {
-    "dev": "node scripts/use-dev-index.mjs && vite",
-    "build": "node scripts/use-dev-index.mjs && tsc -b && vite build && node scripts/promote-dist.mjs",
-    "preview": "vite preview"
+    "dev": "vite --open /classic-snake/",
+    "build": "tsc -b && vite build --base /classic-snake/",
+    "preview": "vite preview --base /classic-snake/"
   },
   "dependencies": {
     "lucide-react": "^0.510.0",
