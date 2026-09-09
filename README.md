@@ -1,8 +1,16 @@
 # Classic Snake
 
-Mobile-first HTML5 Snake. One file, no build step, no frameworks.
+Mobile-first HTML5 Snake. Vite + React, Playadda UX standard.
 
-Open `index.html` in a browser, or add it to a phone home screen.
+Play at `https://playadda.duckdns.org/classic-snake/` after deploy. Vite `base` is **`/classic-snake/`**.
+
+## v1.1.0
+
+Playadda UX (gameplay unchanged):
+
+1. Version ID (`v1.1.0`) on the HUD, title overlay, and game over.
+2. How to play **before** play, with **Start on the same screen**.
+3. Overall high score in the header and on the title card. Updates live when beaten (`localStorage` key `classic-snake-v1`).
 
 ## Play
 
@@ -19,11 +27,12 @@ Open `index.html` in a browser, or add it to a phone home screen.
 | On-screen D-pad | Turn |
 | Center pad / Space / P | Pause |
 | Arrow keys / WASD | Turn |
+| Enter / Space on title | Start |
 | Escape | Close settings |
 
 180° reverse into the body is blocked.
 
-Phone layout keeps the board, score, and D-pad on screen. Landscape puts the pad beside the board.
+Phone layout keeps the board, score, and D-pad on screen. Landscape puts the pad beside the board. Pixel 7a: safe-area padding, no home-bar clip.
 
 ## Settings
 
@@ -41,7 +50,13 @@ Level 1 steps every 168ms. Each level is 14ms faster, floored at 55ms.
 
 ## Stack
 
-Canvas 2D + `requestAnimationFrame`. Web Audio beeps. Offline-capable.
+Vite 6 + React 19 + TypeScript. Canvas 2D + `requestAnimationFrame`. Web Audio beeps.
+
+```bash
+npm install
+npm run dev      # http://localhost:5173/classic-snake/
+npm run build    # dist/ with base /classic-snake/
+```
 
 ## License
 
