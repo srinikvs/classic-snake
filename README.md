@@ -8,6 +8,10 @@ Vite `base` is **`/classic-snake/`**.
 Jenkins: `npm ci` → `vite build --base /classic-snake/` → rsync **`dist/`**.
 Root `index.html` is the Vite source (`/src/main.tsx` only). Do not commit hashed `/classic-snake/assets/` paths.
 
+## v1.1.1
+
+Slower, more controllable movement on phones. Desktop pace is unchanged.
+
 ## v1.1.0
 
 Playadda UX (gameplay unchanged):
@@ -50,7 +54,9 @@ Hamburger menu:
 
 ## Speed
 
-Level 1 steps every 168ms. Each level is 14ms faster, floored at 55ms.
+Desktop: level 1 steps every 168ms. Each level is 14ms faster, floored at 55ms.
+
+Mobile (viewport ≤768px or coarse pointer): level 1 steps every 250ms, floored at 80ms. Same 14ms per-level ramp. Re-evaluated live so a phone in landscape still gets the slower pace.
 
 ## Stack
 

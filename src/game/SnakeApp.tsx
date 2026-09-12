@@ -54,6 +54,7 @@ export function SnakeApp() {
       getScore: () => engine.score,
       getHigh: () => engine.highScore,
       getLevel: () => engine.level,
+      getInterval: () => engine.tickInterval(),
       start: () => engine.play(),
       queueDir: (x: number, y: number) => engine.queueDir(x, y),
     };

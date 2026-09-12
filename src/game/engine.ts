@@ -42,8 +42,10 @@ const DEFAULT_SETTINGS: Settings = {
 };
 
 const BASE_INTERVAL = 168;
+const MOBILE_BASE_INTERVAL = 250;
 const LEVEL_STEP = 14;
 const MIN_INTERVAL = 55;
+const MOBILE_MIN_INTERVAL = 80;
 const START_LENGTH = 3;
 const FOODS_PER_LEVEL = 10;
 const POINTS_PER_FOOD = 10;
@@ -77,8 +79,19 @@ function darken(hex: string, amount: number) {
   const k = 1 - amount;
   return `rgb(${Math.round(r * k)},${Math.round(g * k)},${Math.round(b * k)})`;
 }
+function prefersMobilePace(): boolean {
+  if (typeof window === "undefined") return false;
+  return (
+    window.matchMedia("(max-width: 768px)").matches ||
+    window.matchMedia("(pointer: coarse)").matches
+  );
+}
+
 function intervalFor(level: number) {
-  return Math.max(MIN_INTERVAL, BASE_INTERVAL - (level - 1) * LEVEL_STEP);
+  const mobile = prefersMobilePace();
+  const base = mobile ? MOBILE_BASE_INTERVAL : BASE_INTERVAL;
+  const min = mobile ? MOBILE_MIN_INTERVAL : MIN_INTERVAL;
+  return Math.max(min, base - (level - 1) * LEVEL_STEP);
 }
 function keyDir(code: string): Vec | null {
   if (code === "ArrowUp" || code === "KeyW") return { x: 0, y: -1 };
@@ -194,6 +207,9 @@ export class SnakeEngine {
     this.prevSnake = this.snake.map((s) => ({ ...s }));
   }
 
+  tickInterval() {
+    return intervalFor(this.level);
+  }
   snapshot(): Snapshot {
     return {
       status: this.status,
