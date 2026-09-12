@@ -1,4 +1,4 @@
-export const GAME_VERSION = "1.1.0";
+export const GAME_VERSION = "1.1.1";
 export const STORAGE_KEY = "classic-snake-v1";
 
 export type Status = "ready" | "playing" | "paused" | "over";
