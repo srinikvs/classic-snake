@@ -39,6 +39,7 @@ export type ControlsProbe = {
   getScore: () => number;
   getHigh: () => number;
   getLevel: () => number;
+  getInterval: () => number;
   start: () => void;
   queueDir: (x: number, y: number) => void;
 };

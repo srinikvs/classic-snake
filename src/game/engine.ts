@@ -207,6 +207,9 @@ export class SnakeEngine {
     this.prevSnake = this.snake.map((s) => ({ ...s }));
   }
 
+  tickInterval() {
+    return intervalFor(this.level);
+  }
   snapshot(): Snapshot {
     return {
       status: this.status,
