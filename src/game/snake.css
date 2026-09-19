@@ -437,20 +437,39 @@ header h1 {
   font-variant-numeric: tabular-nums;
 }
 
+.controls {
+  flex: 0 0 auto;
+  display: flex;
+  justify-content: center;
+  margin: 10px auto 0;
+}
+
 .dpad {
   --pad: clamp(48px, 13.5vw, 64px);
-  flex: 0 0 auto;
   display: grid;
   grid-template-columns: var(--pad) var(--pad) var(--pad);
   grid-template-rows: var(--pad) var(--pad) var(--pad);
   gap: 6px;
   justify-content: center;
-  margin: 10px auto 0;
+  min-width: 132px;
+  min-height: 132px;
   touch-action: none;
 }
 
+/* Desktop idle: hide the pad so the how-to card can use the height. */
+.col.is-idle .controls,
 .col.is-idle .dpad {
   display: none;
+}
+
+/* Pixel / phone: keep the pad in flow so maze + controls stay laid out. */
+@media (max-width: 480px) {
+  .col.is-idle .controls {
+    display: flex;
+  }
+  .col.is-idle .dpad {
+    display: grid;
+  }
 }
 
 .col.is-idle .meta {
@@ -769,10 +788,12 @@ header h1 {
 }
 
 @media (max-height: 720px) {
+  .controls {
+    margin-top: 8px;
+  }
   .dpad {
     --pad: clamp(44px, 12vw, 56px);
     gap: 4px;
-    margin-top: 8px;
   }
   .card h2 {
     font-size: clamp(20px, 6vw, 26px);
@@ -818,18 +839,23 @@ header h1 {
     grid-area: hud;
     margin-top: 4px;
   }
-  .dpad {
+  .controls {
     grid-area: dpad;
     align-self: center;
     margin: 0 4px 0 0;
+  }
+  .dpad {
     --pad: clamp(44px, 18vh, 56px);
   }
+  .col.is-idle .controls {
+    display: flex;
+  }
   .col.is-idle .dpad {
-    display: none;
+    display: grid;
   }
   .col.is-idle {
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-areas: "header" "board" "hud";
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas: "header dpad" "board dpad" "hud dpad";
   }
 }
 

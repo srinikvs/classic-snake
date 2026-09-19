@@ -94,4 +94,4 @@ C14 home-bar coverage in CI is a CSS `--safe-bottom` emulation (34px) plus Chrom
 
 ## Hooks
 
-Stable `data-testid` attributes (`version`, `howto`, `start`, `hud`, `best`, `board`, `dpad`, `start-screen`, …). Safe-area padding reads `--safe-top` / `--safe-bottom` (default `env(safe-area-inset-*)`) so Pixel cases can emulate a 34px home bar. Gameplay logic is unchanged.
+Stable `data-testid` attributes (`version`, `howto`, `start`, `hud`, `best`, `board`, `controls`, `dpad`, `start-screen`, …). On viewports ≤480px the D-pad stays in layout even on the how-to screen so C14 can measure a non-null box. Safe-area padding reads `--safe-top` / `--safe-bottom` (default `env(safe-area-inset-*)`) so Pixel cases can emulate a 34px home bar. Gameplay logic is unchanged. `classic-snake-ci` e2e uses local Vite preview (not a live deploy) unless `BASE_URL` is set. Unit tests run via `tsx`.

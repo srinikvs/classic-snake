@@ -1,6 +1,6 @@
 import { expect, type Page } from "@playwright/test";
 import type { CaseFile, Expectation, Step } from "../cases/types.ts";
-import { eatOnce, openFresh, readSave, seedHigh, waitProbe } from "./helpers.ts";
+import { eatOnce, openFresh, readSave, requireBox, seedHigh, startPlay, waitProbe } from "./helpers.ts";
 
 async function applyExpect(page: Page, exp: Expectation, caseId: string): Promise<void> {
   const tag = `${caseId}/${exp.assert}`;
@@ -46,20 +46,18 @@ async function applyExpect(page: Page, exp: Expectation, caseId: string): Promis
       const vp = page.viewportSize()!;
       const ids = (Array.isArray(exp.testId) ? exp.testId : [exp.testId]) as string[];
       for (const id of ids) {
-        const box = await page.getByTestId(id).boundingBox();
-        expect(box, `${tag} ${id}`).toBeTruthy();
-        expect(box!.y, `${tag} ${id} top`).toBeGreaterThanOrEqual(-1);
-        expect(box!.y + box!.height, `${tag} ${id} bottom`).toBeLessThanOrEqual(vp.height + 1);
-        expect(box!.x, `${tag} ${id} left`).toBeGreaterThanOrEqual(-1);
-        expect(box!.x + box!.width, `${tag} ${id} right`).toBeLessThanOrEqual(vp.width + 1);
+        const box = await requireBox(page, id, tag);
+        expect(box.y, `${tag} ${id} top`).toBeGreaterThanOrEqual(-1);
+        expect(box.y + box.height, `${tag} ${id} bottom`).toBeLessThanOrEqual(vp.height + 1);
+        expect(box.x, `${tag} ${id} left`).toBeGreaterThanOrEqual(-1);
+        expect(box.x + box.width, `${tag} ${id} right`).toBeLessThanOrEqual(vp.width + 1);
       }
       return;
     }
     case "boardUsable": {
-      const box = await page.getByTestId("board").boundingBox();
-      expect(box, tag).toBeTruthy();
-      expect(box!.width, `${tag} width`).toBeGreaterThanOrEqual(Number(exp.minWidth ?? 200));
-      expect(box!.height, `${tag} height`).toBeGreaterThanOrEqual(Number(exp.minHeight ?? 200));
+      const box = await requireBox(page, "board", tag);
+      expect(box.width, `${tag} width`).toBeGreaterThanOrEqual(Number(exp.minWidth ?? 200));
+      expect(box.height, `${tag} height`).toBeGreaterThanOrEqual(Number(exp.minHeight ?? 200));
       return;
     }
     case "controlsAboveHomeBar": {
@@ -67,9 +65,8 @@ async function applyExpect(page: Page, exp: Expectation, caseId: string): Promis
       const sab = Number(exp.sab ?? 0);
       const ids = (Array.isArray(exp.testId) ? exp.testId : [exp.testId]) as string[];
       for (const id of ids) {
-        const box = await page.getByTestId(id).boundingBox();
-        expect(box, `${tag} ${id}`).toBeTruthy();
-        expect(box!.y + box!.height, `${tag} ${id} above home-bar`).toBeLessThanOrEqual(vp.height - sab + 2);
+        const box = await requireBox(page, id, tag);
+        expect(box.y + box.height, `${tag} ${id} above home-bar`).toBeLessThanOrEqual(vp.height - sab + 2);
       }
       return;
     }
@@ -105,8 +102,11 @@ async function runStep(page: Page, step: Step, c: CaseFile): Promise<void> {
     case "seedHigh":
       await seedHigh(page, Number(step.score ?? 0));
       return;
+    case "startPlay":
+      await startPlay(page);
+      return;
     case "click":
-      await page.getByTestId(String(step.testId)).click();
+      await page.getByTestId(String(step.testId)).click({ force: true });
       return;
     case "waitVisible":
       await expect(page.getByTestId(String(step.testId))).toBeVisible();
