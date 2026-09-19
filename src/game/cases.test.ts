@@ -25,6 +25,9 @@ test("C14 is a block pixel case with measurable layout expects", () => {
   for (const required of ["viewport", "noVerticalClip", "boardUsable", "controlsAboveHomeBar"]) {
     assert.ok(names.includes(required), `C14 must assert ${required} (got ${names.join(",")})`);
   }
+  const blob = JSON.stringify(c14);
+  assert.ok(blob.includes('"dpad"'), "C14 must measure data-testid=dpad");
+  assert.ok(blob.includes('"controls"'), "C14 must measure data-testid=controls");
 });
 
 for (const c of loadCases({ layer: "unit" })) {

@@ -5,28 +5,29 @@
   "gate": "block",
   "steps": [
     { "op": "openFresh" },
-    { "op": "click", "testId": "start" },
-    { "op": "waitVisible", "testId": "dpad" },
+    { "op": "startPlay" },
     { "op": "expect", "assert": "viewport", "width": 412, "height": 915 },
     { "op": "expect", "assert": "visible", "testId": "hud" },
     { "op": "expect", "assert": "visible", "testId": "board" },
+    { "op": "expect", "assert": "visible", "testId": "controls" },
     { "op": "expect", "assert": "visible", "testId": "dpad" },
     {
       "op": "expect",
       "assert": "noVerticalClip",
-      "testId": ["hud", "board", "dpad", "version"]
+      "testId": ["hud", "board", "controls", "dpad", "version"]
     },
     { "op": "emulateSafeArea", "sat": 24, "sab": 34 }
   ],
   "expect": [
     { "assert": "viewport", "width": 412, "height": 915 },
     { "assert": "visible", "testId": "board" },
+    { "assert": "visible", "testId": "controls" },
     { "assert": "visible", "testId": "dpad" },
     {
       "assert": "noVerticalClip",
-      "testId": ["hud", "board", "dpad"]
+      "testId": ["hud", "board", "controls", "dpad"]
     },
     { "assert": "boardUsable", "minWidth": 200, "minHeight": 200 },
-    { "assert": "controlsAboveHomeBar", "sab": 34, "testId": ["dpad"] }
+    { "assert": "controlsAboveHomeBar", "sab": 34, "testId": ["controls", "dpad"] }
   ]
 }

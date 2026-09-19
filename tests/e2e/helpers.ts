@@ -38,6 +38,39 @@ export async function waitProbe(page: Page): Promise<void> {
   await page.waitForFunction(() => typeof window.__snake?.getInterval === "function");
 }
 
+export async function requireBox(
+  page: Page,
+  testId: string,
+  tag: string,
+): Promise<{ x: number; y: number; width: number; height: number }> {
+  let box: { x: number; y: number; width: number; height: number } | null = null;
+  await expect
+    .poll(
+      async () => {
+        box = await page.getByTestId(testId).boundingBox();
+        return Boolean(box && box.width >= 1 && box.height >= 1);
+      },
+      { message: `${tag}: ${testId} missing or not laid out (boundingBox ${box && JSON.stringify(box)})` },
+    )
+    .toBe(true);
+  if (!box) throw new Error(`${tag}: ${testId} missing or not laid out (boundingBox null)`);
+  return box;
+}
+
+export async function startPlay(page: Page): Promise<void> {
+  await waitProbe(page);
+  const start = page.getByTestId("start");
+  if ((await start.count()) > 0) {
+    await start.click({ force: true }).catch(() => undefined);
+  }
+  await page.evaluate(() => window.__snake?.start());
+  await expect
+    .poll(async () => page.evaluate(() => window.__snake?.getState() ?? ""), { message: "startPlay: playing" })
+    .toBe("playing");
+  await requireBox(page, "dpad", "startPlay");
+  await requireBox(page, "controls", "startPlay");
+}
+
 export async function eatOnce(page: Page): Promise<void> {
   await waitProbe(page);
   await page.evaluate(() => {

@@ -263,6 +263,7 @@ export function SnakeApp() {
             </span>
           </div>
 
+          <nav className="controls" data-testid="controls" aria-label="Direction pad">
           <div className="dpad" id="dpad" data-testid="dpad">
             <span />
             <PadBtn dir="0,-1" label="Up" onDir={queueDir} />
@@ -284,6 +285,7 @@ export function SnakeApp() {
             <PadBtn dir="0,1" label="Down" onDir={queueDir} />
             <span />
           </div>
+          </nav>
         </div>
       </div>
 
