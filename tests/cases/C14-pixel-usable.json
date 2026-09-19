@@ -1,0 +1,32 @@
+{
+  "id": "C14",
+  "layer": "pixel",
+  "title": "Pixel 412×915: maze and controls usable without critical clip",
+  "gate": "block",
+  "steps": [
+    { "op": "openFresh" },
+    { "op": "click", "testId": "start" },
+    { "op": "waitVisible", "testId": "dpad" },
+    { "op": "expect", "assert": "viewport", "width": 412, "height": 915 },
+    { "op": "expect", "assert": "visible", "testId": "hud" },
+    { "op": "expect", "assert": "visible", "testId": "board" },
+    { "op": "expect", "assert": "visible", "testId": "dpad" },
+    {
+      "op": "expect",
+      "assert": "noVerticalClip",
+      "testId": ["hud", "board", "dpad", "version"]
+    },
+    { "op": "emulateSafeArea", "sat": 24, "sab": 34 }
+  ],
+  "expect": [
+    { "assert": "viewport", "width": 412, "height": 915 },
+    { "assert": "visible", "testId": "board" },
+    { "assert": "visible", "testId": "dpad" },
+    {
+      "assert": "noVerticalClip",
+      "testId": ["hud", "board", "dpad"]
+    },
+    { "assert": "boardUsable", "minWidth": 200, "minHeight": 200 },
+    { "assert": "controlsAboveHomeBar", "sab": 34, "testId": ["dpad"] }
+  ]
+}

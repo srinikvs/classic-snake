@@ -1,0 +1,15 @@
+{
+  "id": "B10",
+  "layer": "e2e",
+  "title": "Pixel / coarse pointer uses 250ms base tick",
+  "gate": "block",
+  "steps": [
+    { "op": "openFresh" },
+    { "op": "click", "testId": "start" },
+    { "op": "waitVisible", "testId": "dpad" },
+    { "op": "waitProbe" }
+  ],
+  "expect": [
+    { "assert": "tickInterval", "value": 250 }
+  ]
+}

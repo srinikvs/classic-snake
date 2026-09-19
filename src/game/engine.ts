@@ -31,7 +31,7 @@ export const THEMES: Theme[] = [
   { id: "dusk", name: "Dusk", bg: "#14110f", grid: "rgba(255,200,150,0.07)" },
 ];
 
-const DEFAULT_SETTINGS: Settings = {
+export const DEFAULT_SETTINGS: Settings = {
   snakeColor: SNAKE_COLORS[0],
   foodColor: FOOD_COLORS[0],
   themeId: "ink",
@@ -41,11 +41,11 @@ const DEFAULT_SETTINGS: Settings = {
   sound: true,
 };
 
-const BASE_INTERVAL = 168;
-const MOBILE_BASE_INTERVAL = 250;
-const LEVEL_STEP = 14;
-const MIN_INTERVAL = 55;
-const MOBILE_MIN_INTERVAL = 80;
+export const BASE_INTERVAL = 168;
+export const MOBILE_BASE_INTERVAL = 250;
+export const LEVEL_STEP = 14;
+export const MIN_INTERVAL = 55;
+export const MOBILE_MIN_INTERVAL = 80;
 const START_LENGTH = 3;
 const FOODS_PER_LEVEL = 10;
 const POINTS_PER_FOOD = 10;
@@ -87,8 +87,7 @@ function prefersMobilePace(): boolean {
   );
 }
 
-function intervalFor(level: number) {
-  const mobile = prefersMobilePace();
+export function intervalFor(level: number, mobile = prefersMobilePace()) {
   const base = mobile ? MOBILE_BASE_INTERVAL : BASE_INTERVAL;
   const min = mobile ? MOBILE_MIN_INTERVAL : MIN_INTERVAL;
   return Math.max(min, base - (level - 1) * LEVEL_STEP);
@@ -100,7 +99,7 @@ function keyDir(code: string): Vec | null {
   if (code === "ArrowRight" || code === "KeyD") return { x: 1, y: 0 };
   return null;
 }
-function loadSave(): { highScore: number; settings: Settings } {
+export function loadSave(): { highScore: number; settings: Settings } {
   const fallback = { highScore: 0, settings: { ...DEFAULT_SETTINGS } };
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -115,13 +114,26 @@ function loadSave(): { highScore: number; settings: Settings } {
     return fallback;
   }
 }
-function persist(highScore: number, settings: Settings) {
+export function persist(highScore: number, settings: Settings) {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify({ version: 1, highScore, settings }));
   } catch {
     /* quota / private mode */
   }
 }
+/** Same beat-and-write path `eat()` uses for the Best chip / `classic-snake-v1`. */
+export function applyHighScore(
+  currentHigh: number,
+  score: number,
+  settings: Settings,
+): { highScore: number; beatBest: boolean } {
+  if (score > currentHigh) {
+    persist(score, settings);
+    return { highScore: score, beatBest: true };
+  }
+  return { highScore: currentHigh, beatBest: false };
+}
+
 function splitWrapped(body: Vec[]) {
   const groups: Vec[][] = [];
   let cur: Vec[] = [];
@@ -339,11 +351,9 @@ export class SnakeEngine {
   eat() {
     const gained = POINTS_PER_FOOD * this.level;
     this.score += gained;
-    if (this.score > this.highScore) {
-      this.highScore = this.score;
-      this.beatBest = true;
-      persist(this.highScore, this.settings);
-    }
+    const next = applyHighScore(this.highScore, this.score, this.settings);
+    this.highScore = next.highScore;
+    if (next.beatBest) this.beatBest = true;
     this.foodsThisLevel += 1;
     this.burst(this.food.x + 0.5, this.food.y + 0.5, this.settings.foodColor);
     this.floaters.push({

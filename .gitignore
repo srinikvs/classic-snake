@@ -3,3 +3,7 @@ Thumbs.db
 *.log
 node_modules/
 *.tsbuildinfo
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/

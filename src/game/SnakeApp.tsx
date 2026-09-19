@@ -57,6 +57,11 @@ export function SnakeApp() {
       getInterval: () => engine.tickInterval(),
       start: () => engine.play(),
       queueDir: (x: number, y: number) => engine.queueDir(x, y),
+      placeFoodAhead: () => {
+        const head = engine.snake[0];
+        engine.food = { x: head.x + engine.dir.x, y: head.y + engine.dir.y };
+      },
+      step: () => engine.step(),
     };
     window.__snake = probe;
     window.__controlsTest = probe;
@@ -120,20 +125,24 @@ export function SnakeApp() {
     <div className="snake-root">
       <div className="shell">
         <div className={`col${idle ? " is-idle" : ""}`}>
-          <header>
+          <header data-testid="hud">
             <div className="brand">
               <h1>Classic Snake</h1>
-              <span className="ver-badge" aria-label={`Version ${GAME_VERSION}`}>
+              <span className="ver-badge" data-testid="version" aria-label={`Version ${GAME_VERSION}`}>
                 v{GAME_VERSION}
               </span>
             </div>
             <div className="hud">
               <span className="lv">LV {snap.level}</span>
-              <span className="score">{snap.score}</span>
+              <span className="score" data-testid="score">
+                {snap.score}
+              </span>
             </div>
             <div className={`best-chip${snap.beatBest ? " is-hot" : ""}`} aria-live="polite">
               <span className="best-label">Best</span>
-              <span className="best-value">{snap.highScore}</span>
+              <span className="best-value" data-testid="best">
+                {snap.highScore}
+              </span>
             </div>
             <button type="button" className="icon-btn" aria-label="Open menu" onClick={openMenu}>
               <Menu size={20} strokeWidth={2} />
@@ -145,6 +154,7 @@ export function SnakeApp() {
               <div
                 className="board-frame"
                 id="board"
+                data-testid="board"
                 onPointerDown={(e) => {
                   if (engineRef.current?.status !== "playing") return;
                   engineRef.current.onPointerDown(e.nativeEvent);
@@ -157,11 +167,15 @@ export function SnakeApp() {
               </div>
 
               {snap.status === "ready" && (
-                <div className="veil" id="overlay">
-                  <div className="card card-launch" id="overlayCard">
+                <div className="veil" id="overlay" data-testid="start-screen">
+                  <div className="card card-launch" id="overlayCard" data-testid="start-panel">
                     <div className="card-head">
                       <p className="kicker">Playadda</p>
-                      <span className="ver-badge" aria-label={`Version ${GAME_VERSION}`}>
+                      <span
+                        className="ver-badge"
+                        data-testid="start-version"
+                        aria-label={`Version ${GAME_VERSION}`}
+                      >
                         v{GAME_VERSION}
                       </span>
                     </div>
@@ -171,7 +185,7 @@ export function SnakeApp() {
                       <span className="hi-label">High score</span>
                       <span className="hi-value">{snap.highScore}</span>
                     </div>
-                    <section className="howto" aria-labelledby="howto-title">
+                    <section className="howto" data-testid="howto" aria-labelledby="howto-title">
                       <h3 id="howto-title" className="howto-title">
                         How to play
                       </h3>
@@ -184,7 +198,7 @@ export function SnakeApp() {
                         ))}
                       </ol>
                     </section>
-                    <button type="button" className="cta" onClick={start}>
+                    <button type="button" className="cta" data-testid="start" onClick={start}>
                       Start
                     </button>
                   </div>
@@ -208,7 +222,7 @@ export function SnakeApp() {
                       {" · "}
                       Best {snap.highScore}
                     </p>
-                    <button type="button" className="cta" onClick={start}>
+                    <button type="button" className="cta" data-testid="start" onClick={start}>
                       Start
                     </button>
                     <button type="button" className="cta ghost" onClick={openMenu}>
@@ -249,7 +263,7 @@ export function SnakeApp() {
             </span>
           </div>
 
-          <div className="dpad" id="dpad">
+          <div className="dpad" id="dpad" data-testid="dpad">
             <span />
             <PadBtn dir="0,-1" label="Up" onDir={queueDir} />
             <span />
