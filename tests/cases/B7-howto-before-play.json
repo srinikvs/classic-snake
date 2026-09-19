@@ -12,7 +12,8 @@
     { "assert": "visible", "testId": "start" },
     { "assert": "visible", "testId": "version" },
     { "assert": "heading", "name": "Classic Snake" },
-    { "assert": "hidden", "testId": "dpad" },
+    { "assert": "visible", "testId": "controls" },
+    { "assert": "visible", "testId": "dpad" },
     { "assert": "below", "above": "howto", "below": "start" }
   ]
 }
