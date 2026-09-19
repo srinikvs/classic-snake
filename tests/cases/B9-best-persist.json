@@ -1,0 +1,22 @@
+{
+  "id": "B9",
+  "layer": "e2e",
+  "title": "Best updates in localStorage when beaten and survives reload",
+  "gate": "block",
+  "steps": [
+    { "op": "seedHigh", "score": 5 },
+    { "op": "expect", "assert": "textEquals", "testId": "best", "value": "5" },
+    { "op": "expect", "assert": "storageHigh", "value": 5 },
+    { "op": "click", "testId": "start" },
+    { "op": "waitVisible", "testId": "dpad" },
+    { "op": "eatOnce" },
+    { "op": "expect", "assert": "storageHigh", "value": 10 },
+    { "op": "expect", "assert": "textEquals", "testId": "best", "value": "10" },
+    { "op": "expect", "assert": "textEquals", "testId": "score", "value": "10" },
+    { "op": "reload" }
+  ],
+  "expect": [
+    { "assert": "storageHigh", "value": 10 },
+    { "assert": "textEquals", "testId": "best", "value": "10" }
+  ]
+}

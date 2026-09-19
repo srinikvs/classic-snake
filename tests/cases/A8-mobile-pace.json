@@ -1,0 +1,16 @@
+{
+  "id": "A8",
+  "layer": "unit",
+  "title": "Mobile tick is slower than desktop (250ms base vs 168ms)",
+  "gate": "optional",
+  "steps": [
+    { "op": "nop" },
+    { "op": "expect", "assert": "tickInterval", "level": 1, "mobile": true, "value": 250 },
+    { "op": "expect", "assert": "tickInterval", "level": 1, "mobile": false, "value": 168 }
+  ],
+  "expect": [
+    { "assert": "mobileSlowerThanDesktop", "level": 1 },
+    { "assert": "tickInterval", "level": 20, "mobile": true, "value": 80 },
+    { "assert": "tickInterval", "level": 20, "mobile": false, "value": 55 }
+  ]
+}

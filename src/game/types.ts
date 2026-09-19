@@ -42,6 +42,8 @@ export type ControlsProbe = {
   getInterval: () => number;
   start: () => void;
   queueDir: (x: number, y: number) => void;
+  placeFoodAhead: () => void;
+  step: () => void;
 };
 
 declare global {

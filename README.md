@@ -66,6 +66,17 @@ Vite 6 + React 19 + TypeScript. Canvas 2D + `requestAnimationFrame`. Web Audio b
 npm install
 npm run dev      # http://localhost:5173/classic-snake/
 npm run build    # writes dist/ (Jenkins rsyncs this)
+npm test
+npm run test:e2e
+```
+
+See [TESTING.md](TESTING.md). Cases live in `tests/cases/*.json` (source of truth). Jenkins `classic-snake-ci` / `classic-snake-test` run from git only (`DEPLOY=false`).
+
+Live smoke:
+
+```bash
+BASE_URL=https://playaddatest.duckdns.org/classic-snake/ npm run test:e2e
+BASE_URL=https://playadda.duckdns.org/classic-snake/ npm run test:e2e
 ```
 
 ## License
